@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 echo "Bundling Function"
 cd lambda
-zip -r ../lambda.zip *
+GOARCH=amd64 GOOS=linux go build -o main main.go
+zip -r ../lambda.zip main
 cd ..
 
 echo "Creating Function"
 aws lambda create-function \
     --endpoint-url http://localhost:4566 \
     --function-name lambda \
-    --runtime nodejs14.x \
     --role arn:aws:iam::000000000000:role/lambda \
-    --handler index.handler \
+    --handler main --runtime go1.x \
     --zip-file fileb://lambda.zip
     
 echo "Invoking Function"
