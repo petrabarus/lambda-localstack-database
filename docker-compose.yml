@@ -1,17 +1,28 @@
 version: '3.3'
 services:
   localstack:
+    container_name: "${LOCALSTACK_DOCKER_NAME-localstack_main}"
     image: localstack/localstack:latest
     environment:
      - DEFAULT_REGION=ap-southeast-3
      - SERVICES=s3,lambda
+     - DEBUG=${DEBUG-}
+     - PERSISTENCE=${PERSISTENCE-}
+     - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR-}
     ports:
-     - '4566-4583:4566-4583'
-  mariadb:
-    image: mariadb:latest
+     - "127.0.0.1:4566:4566"
+     - "127.0.0.1:4510-4559:4510-4559"
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+  postgres:
+    image: postgres:alpine
     ports:
-      - "3306:3306"
+      - "5432:5432"
+    volumes:
+      - ./volume/postgres:/var/lib/postgresql/data
     environment:
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_DATABASE=database
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
     restart: always

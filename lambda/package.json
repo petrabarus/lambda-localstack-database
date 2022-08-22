@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mysql": "^2.18.1"
+    "pg": "^8.7.3",
+    "ramda": "^0.28.0"
   }
 }
