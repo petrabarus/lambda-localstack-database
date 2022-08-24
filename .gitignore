@@ -1,2 +1,6 @@
 lambda.zip
 /volume
+/lambda/main
+/lambda/vendor
+/dist/*
+!/dist/.gitkeep
